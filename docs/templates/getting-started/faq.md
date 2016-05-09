@@ -146,7 +146,25 @@ layer_output = get_3rd_layer_output([X, 0])[0]
 layer_output = get_3rd_layer_output([X, 1])[0]
 ```
 
-Another more flexible way of getting output from intermediate layers is to use the [functional API](/getting-started/functional-api-guide).
+Another more flexible way of getting output from intermediate layers is to use the [functional API](/getting-started/functional-api-guide). For example, after fitting an autoencoder on MNIST:
+
+```python
+inputs = Input(shape=(784,))
+first = Dense(512)(inputs)
+second = Dense(32)(first)
+third = Dense(512)(second)
+outputs = Dense(784)(third)
+model = Model(input=inputs, output=outputs)
+model.compile(optimizer='rmsprop', loss='mse')
+model.fit(X, X, ...)
+```
+
+You would get the output of the encoder like this:
+
+```python
+encoder = Model(input=inputs, output=second)
+encoded = encoder.predict(X)
+```
 
 ---
 
